@@ -1,0 +1,109 @@
+<html>
+
+<head>
+    <link rel="icon" href="../img/cuidados-de-saude.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="../css/Videos.css">
+    <title>Cuidado em Saúde</title>
+</head>
+
+<body>
+
+
+    <header class="menu-principal">
+
+        <div class="toolbarInicial">
+            <div class="logo">
+                <img onclick="window.location.href='index.html'" src="../img/cuidados-de-saude.png" />
+
+            </div>
+            <div class="titulo">
+                <h1>Cuidados com a Saúde</h1>
+            </div>
+
+            <div class=" container-buttons">
+                <button class="buttons-toolbar" onclick="window.location.href='Index.html'">Home page</button>
+                <button class="buttons-toolbar" onclick="window.location.href='Dicas.html'">Dicas</button>
+                <button class="buttons-toolbar" onclick="window.location.href='Videos.html'">Videos</button>
+            </div>
+
+            <div class="redes-sociais">
+
+                <ul>
+                    <li>
+                        <img src="../img/facebook.png" />
+                    </li>
+                    <li>
+                        <img src="../img/twitter.png" />
+                    </li>
+                    <li>
+                        <img src="../img/logotipo-do-linkedin.png" />
+                    </li>
+
+                </ul>
+                <div class="container-texto">
+                    <h1>Compartilhe Seus Vídeos Favoritos sobre cuidados com a saude</h1>
+                    <form id="videoForm">
+                        <label for="youtubeLink">Insira o link do YouTube:</label>
+                        <input type="text" id="youtubeLink" >
+                        <button class="add-card-btn" type="submit">Adicionar Video</button>
+                    </form>
+                <div class="container">
+
+                    <div id="videoContainer"></div>
+                </div>
+            </div>
+
+
+    </header>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {  // discarregado e anpara documento HTML inicial foi completamente alisado, sem esperar pelo carregamento completo de estilos
+      loadVideos(); //chama a funcao para carregar os videos salvos do localstorage
+
+      document.getElementById('videoForm').addEventListener('submit', function(event) {  //Adiciona um listener para o evento de submissão do formulário com id 'videoForm'
+        event.preventDefault(); 
+        
+        const youtubeLink = document.getElementById('youtubeLink').value; // obtem o valor de entrada
+        const videoId = getYoutubeVideoId(youtubeLink); // extrai o id do videos do link
+        
+        if (videoId) {
+            addVideo(videoId); //adiciona o video a pagina
+            saveVideo(videoId); //salva o id do video no localstorage
+        } else {
+            alert('Por favor, insira um link válido do YouTube.'); //mostra mensagem de erro se o link for invalido
+        }
+       });
+    });
+
+    function getYoutubeVideoId(url) { //extrai o id do video do link do youtube usando regex
+        const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|.+\?v=|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/; 
+        const match = url.match(regex); // executa a regex no URL
+        return match ? match[1] : null; // retorna o id do video se houver correspondencia caso contrario retorna null
+    }
+
+    function addVideo(videoId) { // funcao para adicionar o video a pagina
+        const iframe = document.createElement('iframe'); // cria um elemento iframe
+        iframe.src = `https://www.youtube.com/embed/${videoId}`; // define a URL do iframe com o id do video
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'; // define permissoes do iframe
+        iframe.allowFullscreen = true; // permite o modo de tela cheia no iframe
+
+    
+        document.getElementById('videoContainer').appendChild(iframe); // adiciona o iframe ao container de videos na pagina
+    }
+
+    function saveVideo(videoId) { // funcao para salvar o id do video 
+        let videos = JSON.parse(localStorage.getItem('videos')) || []; // recupera a lista de videos do localstorage como uma string JSON 
+        videos.push(videoId); // adiciona o novo ID do video a lista
+        localStorage.setItem('videos', JSON.stringify(videos)); // salva a lista atualizada de volta no local storage como uma string JSON
+    }  
+
+    function loadVideos() { // funcao para carregar e exibir os videos salvos
+        let videos = JSON.parse(localStorage.getItem('videos')) || []; // recupera a lista de videos do localstorage ou inicializa uma lista vazia
+        videos.forEach(videoId => { // itera sobre cada video salvo e executa a funcao fornecida para cada um
+        addVideo(videoId); // para cada id de videos na lista adiciona o video a pagina
+    });
+    }
+    </script>
+</body>
+
+</html>
