@@ -1,0 +1,132 @@
+<html>
+
+<head>
+    <link rel="icon" href="../img/cuidados-de-saude.png" type="image/png">
+    <link rel="stylesheet" type="text/css" href="../css/Dicas.css">
+    <title>Cuidado em Saúde</title>
+</head>
+
+<body>
+
+
+    <header class="menu-principal">
+
+        <div class="toolbarInicial">
+            <div class="logo">
+                <img onclick="window.location.href='index.html'" src="../img/cuidados-de-saude.png" />
+
+            </div>
+            <div class="titulo">
+                <h1>Cuidados com a Saúde</h1>
+            </div>
+
+            <div class=" container-buttons">
+                <button class="buttons-toolbar" onclick="window.location.href='Index.html'">Home page</button>
+                <button class="buttons-toolbar" onclick="window.location.href='Dicas.html'">Dicas</button>
+                <button class="buttons-toolbar" onclick="window.location.href='Videos.html'">Videos</button>
+            </div>
+
+            <div class="redes-sociais">
+
+                <ul>
+                    <li>
+                        <img src="../img/facebook.png" />
+                    </li>
+                    <li>
+                        <img src="../img/twitter.png" />
+                    </li>
+                    <li>
+                        <img src="../img/logotipo-do-linkedin.png" />
+                    </li>
+
+                </ul>
+            </div>
+
+                <div class="container-texto">
+                    <h1 class="font">Deixe uma recomendacao ou um habito saudavel abaixo</h1>
+
+                    <div class="cria-card">
+                        <div class="card-container">
+                            <textarea id="textInput" placeholder="Digite sua recomendação aqui..."></textarea>
+                            <button class="add-card-btn" onclick="createCard()" , c>Adicionar Card</button>
+                        </div>
+                    </div>
+
+                    <div class="cards">
+                        <div class="adicionar-cards">
+
+                            <div class=" cardContainer" id="cardContainer"></div>
+                        </div>
+
+
+                    </div>
+
+
+                </div>
+
+
+
+
+
+    </header>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {  // dispara documento HTML inicial foi completamente carregado e analisado, sem esperar pelo carregamento completo de estilos
+      loadCards(); // exibe os cards salvos
+
+      document.getElementById('card-container').addEventListener('submit', function(event) { //Adiciona um listener para o evento de submissão do formulário com id 'card-container'
+        event.preventDefault();
+        
+        createCard();
+        }
+       )});
+
+
+        function createCard() {
+            const texto = document.getElementById('textInput').value; //obtem o valor inserido no campo de texto
+            if (texto.trim() !== '') { //verifica se o campo de texto esta vazio
+                var cardContainer = document.getElementById('cardContainer'); // referencia do elemento 
+
+                var novoCard = document.createElement('div'); // cria a div do cartao
+                novoCard.className = 'card'; // define a classe do novo cartao para card
+                novoCard.textContent = texto; // define texto do novo cartao com o valor obtido do campo de entrada
+
+
+                cardContainer.appendChild(novoCard); // adiciona o novo card ao container  
+
+                saveCard(texto); // chama a funcao para salvar o texto do cartao
+                document.getElementById('textInput').value = ''; //limpa campo de entrada de texto
+                
+
+            } else { // exibe uma mensagem se o campo estiver vazio
+                alert('Por favor, insira algum texto!'); // pop up de alerta
+            }
+
+        }
+
+        function saveCard(texto) { // funcao para salvar os cards
+            let texts = JSON.parse(localStorage.getItem('texts')) || []; // obtem textos salvos do armazenamenamento local e converte de json para um array
+            texts.push(texto); // adiciona novo texto ao array de texts
+            localStorage.setItem('texts', JSON.stringify(texts)); // converte o array de textos para json e o armazena no local
+        } 
+
+        function loadCards() { //carrega os cards salvos
+            let texts = JSON.parse(localStorage.getItem('texts')) || []; // obtem textos salvos do armazenamenamento local e converte de json para um array
+            texts.forEach(texto => { // itera sobre cada texts salvo e executa a funcao fornecida para cada um
+                const cardContainer = document.getElementById('cardContainer'); // obtem a referencia ao elemento onde os cartoes serao adicionados
+
+                const novoCard = document.createElement('div'); // cria a div do cartao
+                novoCard.className = 'card'; // define a classe do novo cartao para card
+                novoCard.textContent = texto; // define texto do novo cartao com o valor obtido do campo de entrada
+
+                cardContainer.appendChild(novoCard); // adiciona o novo card ao container  
+            });
+        }
+
+
+        
+
+    </script>
+</body>
+
+</html>
